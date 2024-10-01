@@ -4,61 +4,45 @@ mongoose.set('strictQuery', false)
 
 //const password = process.argv[2]
 
- const url = process.env.MONGODB_URI
+const url = process.env.MONGODB_URI
 
- console.log('connecting to', url)
+console.log('connecting to', url)
 
- mongoose.connect(url)
- .then((result)=> { console.log('connected to MONGODB')
- })
- .catch(error=>{console.log('error connecting to MONGODB:', error.message)
- })
+mongoose
+  .connect(url)
+  // eslint-disable-next-line no-unused-vars
+  .then((_result) => {
+    console.log('connected to MONGODB')
+  })
+  .catch((error) => {
+    console.log('error connecting to MONGODB:', error.message)
+  })
 
- const personSchema =  new mongoose.Schema({
+const personSchema = new mongoose.Schema({
   name: {
-    type: String, 
+    type: String,
     minLength: 3,
-     required: true
-    }, 
-    number: {
-      type: String,
-      minLength: 8,
-      validate: {
-        validator: v=>/\d{2,3}-\d+/.test(v),
-        message: prop=> `${prop.value} is not a valid pkone number`, 
-      },
-      
-      required: true, 
-      }
-    })
+    required: true,
+  },
+  number: {
+    type: String,
+    minLength: 8,
+    validate: {
+      validator: (v) => /\d{2,3}-\d+/.test(v),
+      message: (prop) => `${prop.value} is not a valid pkone number`,
+    },
 
- personSchema.set('toJSON',{
-  transform: (document, returnedObject)=>{
-  returnedObject.id= returnedObject._id.toString()
-  delete returnedObject._id
-  delete returnedObject.__v
-}
+    required: true,
+  },
 })
 
- module.exports = mongoose.model('Person', personSchema)
+personSchema.set('toJSON', {
+  transform: (_document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString()
+    delete returnedObject._id
+    delete returnedObject.__v
+  },
+})
 
-//  const mySchema = new mongoose.Schema({name: String, condition: Boolean})
+module.exports = mongoose.model('Person', personSchema)
 
-//  mySchema.set('toJSON', {
-//   transform: (document, rtned)=>{
-//     rtned.id = rtned._id.toString()
-//     delete rtned._id
-//     delete rtned.__v
-//   }
-//  })
-
-//  module.exports = mongoose.model('MyPerson', mySchema)
-
-// const mongoose = require('mongoose')
-
-// mongoose.set('strictQuery', false)
-// const url = process.env.MMMM_URI
-
-// console.log('connec......')
-// mongoose.connect(url).then((result)=>{console.log('connected to MONGODB')})
-// .catch((error)=>console.log('error connect....', error.message))
